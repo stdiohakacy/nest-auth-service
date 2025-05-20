@@ -1,24 +1,69 @@
-export interface ValueObjectProps {
-  [index: string]: unknown;
-}
+import { ArgumentNotProvidedException } from '@base/exceptions';
+import { Guard } from '../patterns/guard.pattern';
+import { convertPropsToObject } from '@base/utils/object.util';
 
 /**
- * @desc ValueObjects are objects that we determine their
- * equality through their structural property.
+ * Domain Primitive is an object that contains only a single value
  */
-export abstract class BaseValueObject<T extends ValueObjectProps> {
-  public readonly props: T;
+export type Primitives = string | number | boolean;
+export interface DomainPrimitive<T extends Primitives | Date> {
+  value: T;
+}
 
-  constructor(props: T) {
-    this.props = Object.freeze({ ...props });
+type ValueObjectProps<T> = T extends Primitives | Date ? DomainPrimitive<T> : T;
+
+export abstract class BaseValueObject<T> {
+  protected readonly props: ValueObjectProps<T>;
+  protected abstract validate(props: ValueObjectProps<T>): void;
+
+  constructor(props: ValueObjectProps<T>) {
+    this.checkIfEmpty(props);
+    this.validate(props);
+    this.props = props;
   }
 
-  public equals(vo?: BaseValueObject<T>) {
-    if (!vo || !(vo instanceof BaseValueObject)) {
+  static isValueObject(obj: unknown): obj is BaseValueObject<unknown> {
+    return obj instanceof BaseValueObject;
+  }
+
+  /**
+   *  Check if two Value Objects are equal. Checks structural equality.
+   * @param vo BaseValueObject
+   */
+  public equals(vo?: BaseValueObject<T>): boolean {
+    if (vo === null || vo === undefined) {
       return false;
     }
-    return Object.keys(this.props).every(
-      (key) => this.props[key] === vo?.props[key],
-    );
+    return JSON.stringify(this) === JSON.stringify(vo);
+  }
+
+  /**
+   * Unpack a value object to get its raw properties
+   */
+  public unpack(): T {
+    if (this.isDomainPrimitive(this.props)) {
+      return this.props.value;
+    }
+
+    const propsCopy = convertPropsToObject(this.props);
+    return Object.freeze(propsCopy);
+  }
+
+  private checkIfEmpty(props: ValueObjectProps<T>): void {
+    if (
+      Guard.isEmpty(props) ||
+      (this.isDomainPrimitive(props) && Guard.isEmpty(props.value))
+    ) {
+      throw new ArgumentNotProvidedException('Property cannot be empty');
+    }
+  }
+
+  private isDomainPrimitive(
+    obj: unknown,
+  ): obj is DomainPrimitive<T & (Primitives | Date)> {
+    if (Object.prototype.hasOwnProperty.call(obj, 'value')) {
+      return true;
+    }
+    return false;
   }
 }

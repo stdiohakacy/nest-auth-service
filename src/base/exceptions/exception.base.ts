@@ -1,5 +1,3 @@
-import { ApplicationRequestContextService } from '../application/context/application.request.context';
-
 export interface SerializedException {
   message: string;
   code: string;
@@ -43,8 +41,7 @@ export abstract class ExceptionBase extends Error {
   ) {
     super(message);
     Error.captureStackTrace(this, this.constructor);
-    const ctx = ApplicationRequestContextService.getContext();
-    this.correlationId = ctx.requestId;
+    this.correlationId = Math.random().toString(36).substring(2, 15); // TODO: Will replace with a proper correlationId generator
   }
 
   /**

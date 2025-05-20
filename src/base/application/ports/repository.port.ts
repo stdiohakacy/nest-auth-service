@@ -1,4 +1,5 @@
-import { BaseUniqueEntityId } from '@base/domain/identifier/base.unique-entity.id';
+import { Option } from 'oxide.ts';
+import { BaseUniqueEntityId } from '../../domain/identifier/base.unique-entity.id';
 
 /*  Most of repositories will probably need generic 
     save/find/delete operations, so it's easier
@@ -21,7 +22,7 @@ export class Paginated<T> {
   }
 }
 
-export type OrderBy = { field: string | true; param: 'asc' | 'desc' };
+export type OrderBy = { field: string | true; param: 'ASC' | 'DESC' };
 
 export type PaginatedQueryParams = {
   limit: number;
@@ -35,6 +36,11 @@ export type PaginatedQueryParams = {
  * T extends AggregateRoot to ensure repositories only work with entities
  */
 export interface RepositoryPort<TEntity> {
+  findOneById(id: BaseUniqueEntityId): Promise<Option<TEntity>>;
+
+  findAll(): Promise<TEntity[]>;
+
+  findAllPaginated(params: PaginatedQueryParams): Promise<Paginated<TEntity>>;
   /**
    * Save an entity (create or update)
    */
