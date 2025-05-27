@@ -19,11 +19,7 @@ export class GrpcResponseTimeInterceptor implements NestInterceptor {
         const method = context.getHandler().name;
         const service = context.getClass().name;
 
-        console.log(
-          `[gRPC] ${service}.${method} took ${duration.toFixed(2)} ms`,
-        );
         // Optional: store in metrics system (Prometheus, Datadog, etc.)
-
         RequestContextService.clear();
       }),
     );

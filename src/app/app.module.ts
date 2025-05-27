@@ -1,9 +1,10 @@
 import { CqrsModule } from '@nestjs/cqrs';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
+import { FeatureModule } from '../modules/feature.module';
 import configs from '../configs';
-import { RequestModule } from './request/request.module';
 import { AppMiddlewareModule } from './app.middleware.module';
+import { SharedModule } from 'src/shared/shared.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { AppMiddlewareModule } from './app.middleware.module';
     }),
     AppMiddlewareModule,
     CqrsModule.forRoot(),
-    RequestModule.forRoot(),
+    SharedModule,
+    FeatureModule,
   ],
   providers: [],
 })

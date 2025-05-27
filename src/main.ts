@@ -9,8 +9,8 @@ import compression from 'compression';
 import { useContainer, validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { AppEnvDto } from './app/dtos/app.env.dto';
-import { GrpcRequestIdInterceptor } from './app/request/interceptors/grpc.request.id.interceptor';
-import { GrpcResponseTimeInterceptor } from './app/request/interceptors/grpc.response-time.interceptor';
+import { GrpcRequestIdInterceptor } from './shared/request/interceptors/grpc.request.id.interceptor';
+import { GrpcResponseTimeInterceptor } from './shared/request/interceptors/grpc.response-time.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -64,11 +64,6 @@ async function bootstrap() {
     throw new Error('Env Variable Invalid');
   }
 
-  const protoPath = join(
-    __dirname,
-    'modules/auth/presentation/grpc/protos/user.proto',
-  );
-
   const grpcApp = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
@@ -76,14 +71,10 @@ async function bootstrap() {
       options: {
         url: `${grpcHost}:${grpcPort}`,
         package: 'user',
-        loader: {
-          keepCase: true,
-          longs: String,
-          enums: String,
-          defaults: true,
-          oneofs: true,
-        },
-        protoPath,
+        protoPath: join(
+          __dirname,
+          'modules/auth/presentation/grpc/protos/user.proto',
+        ),
         onLoadPackageDefinition: (pkg, server) => {
           new ReflectionService(pkg).addToServer(server);
         },
@@ -91,13 +82,13 @@ async function bootstrap() {
     },
   );
 
-  grpcApp.useGlobalInterceptors(
-    new GrpcRequestIdInterceptor(),
-    new GrpcResponseTimeInterceptor(),
-  );
+  const requestIdInterceptor = grpcApp.get(GrpcRequestIdInterceptor);
+  const responseTimeInterceptor = grpcApp.get(GrpcResponseTimeInterceptor);
+  grpcApp.useGlobalInterceptors(requestIdInterceptor, responseTimeInterceptor);
 
   grpcApp.listen();
-  console.log('gRPC Server started on port 6000');
+
+  console.log(`gRPC Server started on ${grpcHost}:${grpcPort}`);
 
   return;
 }
