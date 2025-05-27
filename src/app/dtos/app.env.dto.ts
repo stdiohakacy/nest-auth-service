@@ -39,6 +39,16 @@ export class AppEnvDto {
   @Type(() => Number)
   GRPC_PORT: number;
 
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(1)
+  HTTP_HOST: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  @Type(() => Number)
+  HTTP_PORT: number;
+
   @IsBoolean()
   @IsNotEmpty()
   @Type(() => Boolean)

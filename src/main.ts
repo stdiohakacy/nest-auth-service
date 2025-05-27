@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { join } from 'path';
+import { MicroserviceOptions } from '@nestjs/microservices';
 import { ReflectionService } from '@grpc/reflection';
 import { Logger, NestApplicationOptions, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -22,6 +21,9 @@ async function bootstrap() {
 
   const grpcHost: string = configService.get<string>('app.grpc.host');
   const grpcPort: number = configService.get<number>('app.grpc.port');
+  const restHost: string = configService.get<string>('app.rest.host');
+  const restPort: number = configService.get<number>('app.rest.port');
+
   const env: string = configService.get<string>('app.env');
   const timezone: string = configService.get<string>('app.timezone');
   const globalPrefix: string = configService.get<string>('app.globalPrefix');
@@ -64,17 +66,23 @@ async function bootstrap() {
     throw new Error('Env Variable Invalid');
   }
 
+  // Swagger
+  // await swaggerInit(app);
+
+  // Listen
+  await app.listen(restPort, restHost);
+
   const grpcApp = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
-      transport: Transport.GRPC,
+      // transport: Transport.GRPC,
       options: {
-        url: `${grpcHost}:${grpcPort}`,
-        package: 'user',
-        protoPath: join(
-          __dirname,
-          'modules/auth/presentation/grpc/protos/user.proto',
-        ),
+        // url: `${grpcHost}:${grpcPort}`,
+        // package: 'user',
+        // protoPath: join(
+        //   __dirname,
+        //   'modules/auth/presentation/grpc/protos/user.proto',
+        // ),
         onLoadPackageDefinition: (pkg, server) => {
           new ReflectionService(pkg).addToServer(server);
         },
@@ -89,6 +97,7 @@ async function bootstrap() {
   grpcApp.listen();
 
   console.log(`gRPC Server started on ${grpcHost}:${grpcPort}`);
+  console.log(`HTTP Server started on ${await app.getUrl()}`);
 
   return;
 }

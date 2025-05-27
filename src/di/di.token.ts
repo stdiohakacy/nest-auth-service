@@ -1,0 +1,2 @@
+export const AUTH_USER_REPOSITORY_PORT = Symbol('AUTH_USER_REPOSITORY_PORT');
+export const USER_GRPC_PORT = Symbol('USER_GRPC_PORT');

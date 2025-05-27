@@ -1,4 +1,3 @@
-import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { RegisterCommand } from '../register.command';
 import { Result } from 'oxide.ts';
@@ -8,7 +7,10 @@ export class RegisterCommandHandler
   implements ICommandHandler<RegisterCommand, Result<string, any>>
 {
   constructor() {}
-  execute(command: RegisterCommand): Promise<Result<string, any>> {
-    throw new Error('Method not implemented.');
+  async execute(command: RegisterCommand): Promise<any> {
+    const { dto } = command;
+    console.log(dto);
+
+    const { name, email, password } = dto;
   }
 }
