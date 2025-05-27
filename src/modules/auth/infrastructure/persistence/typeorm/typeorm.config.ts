@@ -4,7 +4,7 @@ import { join } from 'path';
 export const TypeOrmConfig: DataSourceOptions = {
   type: 'postgres',
   host: 'localhost',
-  port: 5432,
+  port: 5433,
   username: 'postgres',
   password: 'postgres',
   database: 'nest-auth-db',
