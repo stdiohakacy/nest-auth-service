@@ -1,4 +1,4 @@
-export enum ENUM_APP_ENVIRONMENT {
+export enum ENUM_AUTH_SRV_APP_ENVIRONMENT {
   PRODUCTION = 'production',
   MIGRATION = 'migration',
   STAGING = 'staging',
@@ -6,6 +6,6 @@ export enum ENUM_APP_ENVIRONMENT {
   LOCAL = 'local',
 }
 
-export enum ENUM_APP_TIMEZONE {
+export enum ENUM_AUTH_SRV_APP_TIMEZONE {
   ASIA_JAKARTA = 'Asia/Jakarta',
 }

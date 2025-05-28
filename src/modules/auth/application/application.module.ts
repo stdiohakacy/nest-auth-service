@@ -1,6 +1,6 @@
 import { Module, Provider } from '@nestjs/common';
 import { InfrastructureModule } from '../infrastructure/infrastructure.module';
-import { AUTH_USER_REPOSITORY_PORT, USER_GRPC_PORT } from 'src/di/di.token';
+import { AUTH_USER_REPOSITORY_PORT, USER_SRV_GRPC_PORT } from 'src/di/di.token';
 import { AuthUserRepositoryImpl } from '../infrastructure/persistence/typeorm/repositories/auth-user.repository.impl';
 import { UserGrpcAdapter } from '../infrastructure/grpc/user.grpc.adapter';
 import { authCommandHandlers } from './commands/register/handlers';
@@ -11,7 +11,7 @@ const ports: Provider[] = [
     useClass: AuthUserRepositoryImpl,
   },
   {
-    provide: USER_GRPC_PORT,
+    provide: USER_SRV_GRPC_PORT,
     useClass: UserGrpcAdapter,
   },
 ];

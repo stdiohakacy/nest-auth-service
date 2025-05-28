@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { RegisterCommand } from '../register.command';
 import { Ok, Result } from 'oxide.ts';
 import { Inject } from '@nestjs/common';
-import { USER_GRPC_PORT } from 'src/di/di.token';
+import { USER_SRV_GRPC_PORT } from 'src/di/di.token';
 import { UserGrpcPort } from '@module/auth/application/ports/outbound/user.grpc.port';
 import { PasswordVO } from '@module/auth/domain/value-object/password.vo';
 
@@ -11,7 +11,8 @@ export class RegisterCommandHandler
   implements ICommandHandler<RegisterCommand, Result<string, any>>
 {
   constructor(
-    @Inject(USER_GRPC_PORT) private readonly userGrpcPort: UserGrpcPort,
+    @Inject(USER_SRV_GRPC_PORT)
+    private readonly userGrpcPort: UserGrpcPort,
   ) {}
   async execute(command: RegisterCommand): Promise<any> {
     const { dto } = command;

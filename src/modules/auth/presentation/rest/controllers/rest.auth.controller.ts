@@ -9,7 +9,6 @@ export class RestAuthController {
 
   @Post('/register')
   async register(@Body() body: any): Promise<any> {
-    console.log('OK!');
     await this.commandBus.execute(new RegisterCommand(body));
   }
 }

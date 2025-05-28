@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { ENUM_APP_ENVIRONMENT } from 'src/app/enums/app.enum';
+import { ENUM_AUTH_SRV_APP_ENVIRONMENT } from 'src/app/enums/app.enum';
 import { join } from 'path';
 import { TypeOrmOptionInterface } from './interfaces/typeorm.option.interface';
 
@@ -12,7 +12,7 @@ export class TypeOrmOptionService implements TypeOrmOptionInterface {
   createOptions(): TypeOrmModuleOptions {
     const env = this.configService.get<string>('app.env');
 
-    const isProd = env === ENUM_APP_ENVIRONMENT.PRODUCTION;
+    const isProd = env === ENUM_AUTH_SRV_APP_ENVIRONMENT.PRODUCTION;
 
     return {
       type: 'postgres',
@@ -23,6 +23,7 @@ export class TypeOrmOptionService implements TypeOrmOptionInterface {
       database: this.configService.get<string>('postgres.name'),
       logging: !isProd,
       entities: [join(__dirname, 'entities', '*.entity-orm.{ts,js}')],
+      synchronize: true,
       ssl: isProd ? { rejectUnauthorized: false } : false,
       extra: {
         max: 20,

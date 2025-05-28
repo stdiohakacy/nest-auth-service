@@ -4,18 +4,27 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthUserEntityOrm } from './persistence/typeorm/entities/auth-user.entity-orm';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    ClientsModule.register([
+    ConfigModule,
+    ClientsModule.registerAsync([
       {
         name: 'USER_SERVICE_GRPC',
-        transport: Transport.GRPC,
-        options: {
-          url: '[::]:6000',
-          package: 'user',
-          protoPath: join(__dirname, '../presentation/grpc/protos/user.proto'),
-        },
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: async (configService: ConfigService) => ({
+          transport: Transport.GRPC,
+          options: {
+            url: configService.get<string>('app.grpc.userService.url'),
+            package: 'user',
+            protoPath: join(
+              __dirname,
+              '../presentation/grpc/protos/user.proto',
+            ),
+          },
+        }),
       },
     ]),
     TypeOrmDatabaseModule,
