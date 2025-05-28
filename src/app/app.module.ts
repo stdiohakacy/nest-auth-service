@@ -20,6 +20,5 @@ import { SharedModule } from 'src/shared/shared.module';
     SharedModule,
     FeatureModule,
   ],
-  providers: [],
 })
 export class AppModule {}

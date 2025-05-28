@@ -18,7 +18,7 @@ export class PasswordVO extends BaseValueObject<PasswordProps> {
     super(props);
   }
 
-  get value() {
+  get hashed() {
     return this.props.hashed;
   }
 

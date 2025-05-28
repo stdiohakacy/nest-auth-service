@@ -7,6 +7,6 @@ export default registerAs(
     port: parseInt(process.env.POSTGRES_PORT),
     username: process.env.POSTGRES_USERNAME,
     password: process.env.POSTGRES_PASSWORD,
-    name: process.env.POSTGRES_NAME,
+    name: process.env.POSTGRES_DB,
   }),
 );

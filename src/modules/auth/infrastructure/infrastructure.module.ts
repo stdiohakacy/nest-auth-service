@@ -12,7 +12,7 @@ import { join } from 'path';
         name: 'USER_SERVICE_GRPC',
         transport: Transport.GRPC,
         options: {
-          url: '[::]:4000',
+          url: '[::]:6000',
           package: 'user',
           protoPath: join(__dirname, '../presentation/grpc/protos/user.proto'),
         },
