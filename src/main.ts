@@ -66,10 +66,6 @@ async function bootstrap() {
     throw new Error('Env Variable Invalid');
   }
 
-  // Swagger
-  // await swaggerInit(app);
-
-  // Listen
   await app.listen(restPort, restHost);
 
   const grpcApp = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -94,7 +90,7 @@ async function bootstrap() {
   const responseTimeInterceptor = grpcApp.get(GrpcResponseTimeInterceptor);
   grpcApp.useGlobalInterceptors(requestIdInterceptor, responseTimeInterceptor);
 
-  grpcApp.listen();
+  await grpcApp.listen();
 
   console.log(`gRPC Server started on ${grpcHost}:${grpcPort}`);
   console.log(`HTTP Server started on ${await app.getUrl()}`);
