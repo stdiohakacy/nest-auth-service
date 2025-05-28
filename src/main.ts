@@ -93,7 +93,8 @@ async function bootstrap() {
   await grpcApp.listen();
 
   console.log(`gRPC Server started on ${grpcHost}:${grpcPort}`);
-  console.log(`HTTP Server started on ${await app.getUrl()}`);
+  // console.log(`HTTP Server started on ${await app.getUrl()}`);
+  console.log(`HTTP Server started on ${restHost}:${restPort}`);
 
   return;
 }
