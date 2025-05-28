@@ -21,7 +21,6 @@ export class TypeOrmOptionService implements TypeOrmOptionInterface {
       username: this.configService.get<string>('postgres.username'),
       password: this.configService.get<string>('postgres.password'),
       database: this.configService.get<string>('postgres.name'),
-      synchronize: !isProd,
       logging: !isProd,
       entities: [join(__dirname, 'entities', '*.entity-orm.{ts,js}')],
       ssl: isProd ? { rejectUnauthorized: false } : false,
