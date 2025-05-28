@@ -8,8 +8,6 @@ import compression from 'compression';
 import { useContainer, validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { AppEnvDto } from './app/dtos/app.env.dto';
-import { GrpcRequestIdInterceptor } from './shared/request/interceptors/grpc.request.id.interceptor';
-import { GrpcResponseTimeInterceptor } from './shared/request/interceptors/grpc.response-time.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -78,10 +76,6 @@ async function bootstrap() {
       },
     },
   );
-
-  const requestIdInterceptor = grpcApp.get(GrpcRequestIdInterceptor);
-  const responseTimeInterceptor = grpcApp.get(GrpcResponseTimeInterceptor);
-  grpcApp.useGlobalInterceptors(requestIdInterceptor, responseTimeInterceptor);
 
   await grpcApp.listen();
 
