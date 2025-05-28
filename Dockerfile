@@ -12,6 +12,4 @@ RUN pnpm install
 
 COPY . .
 
-EXPOSE 3002
-
 CMD ["pnpm", "start:local"]

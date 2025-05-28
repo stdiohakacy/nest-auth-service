@@ -71,14 +71,7 @@ async function bootstrap() {
   const grpcApp = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
-      // transport: Transport.GRPC,
       options: {
-        // url: `${grpcHost}:${grpcPort}`,
-        // package: 'user',
-        // protoPath: join(
-        //   __dirname,
-        //   'modules/auth/presentation/grpc/protos/user.proto',
-        // ),
         onLoadPackageDefinition: (pkg, server) => {
           new ReflectionService(pkg).addToServer(server);
         },
@@ -93,7 +86,6 @@ async function bootstrap() {
   await grpcApp.listen();
 
   console.log(`gRPC Server started on ${grpcHost}:${grpcPort}`);
-  // console.log(`HTTP Server started on ${await app.getUrl()}`);
   console.log(`HTTP Server started on ${restHost}:${restPort}`);
 
   return;
