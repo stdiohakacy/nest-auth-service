@@ -1,10 +1,9 @@
 import { RegisterCommand } from '@module/auth/application/commands/register/register.command';
 import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { routesV1 } from 'src/configs/app.routes';
 import { RegisterRestRequestDto } from '../dtos/request/register.rest-request.dto';
 
-@Controller(routesV1.auth.root)
+@Controller('auth')
 export class RestAuthController {
   constructor(private readonly commandBus: CommandBus) {}
 

@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  nest-auth-db:
+    image: postgres:15
+    container_name: nest-auth-db-container
+    restart: always
+    environment:
+      - POSTGRES_DB=${AUTH_SRV_POSTGRES_DB}
+      - POSTGRES_USER=${AUTH_SRV_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${AUTH_SRV_POSTGRES_PASSWORD}
+    env_file:
+      - .env
+    ports:
+      - '${AUTH_SRV_POSTGRES_PORT}:5432'
+    volumes:
+      - nest-auth-db-data:/var/lib/postgresql/data
+    networks:
+      - nest-microservices-network
+
+  nest-auth-srv:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nest-auth-srv-container
+    env_file:
+      - .env
+    ports:
+      - '${AUTH_SRV_HTTP_PORT}:${AUTH_SRV_HTTP_PORT}'
+    depends_on:
+      - nest-auth-db
+    networks:
+      - nest-microservices-network
+
+volumes:
+  nest-auth-db-data:
+
+networks:
+  nest-microservices-network:
+    driver: bridge

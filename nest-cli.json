@@ -4,7 +4,13 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "assets": ["**/modules/**/presentation/grpc/protos/*.proto"],
+    "assets": [
+      "**/modules/**/presentation/grpc/protos/*.proto",
+      {
+        "include": "shared/languages/**/*",
+        "outDir": "dist"
+      }
+    ],
     "watchAssets": true
   }
 }
