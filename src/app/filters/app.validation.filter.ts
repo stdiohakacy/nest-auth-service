@@ -17,7 +17,7 @@ export class AppValidationFilter implements ExceptionFilter {
   ): Promise<void> {
     const ctx: HttpArgumentsHost = host.switchToHttp();
     const response: Response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<RequestAppInterface<any>>();
+    const request = ctx.getRequest<RequestAppInterface>();
 
     this.logger.error(exception);
 

@@ -1,5 +1,5 @@
 import { Request } from 'express';
 
-export interface RequestAppInterface<T> extends Request {
+export interface RequestAppInterface<T = any> extends Request {
   user?: T;
 }

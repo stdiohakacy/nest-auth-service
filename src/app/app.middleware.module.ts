@@ -11,12 +11,17 @@ import { AppCorsMiddleware } from './middlewares/app.cors.middleware';
 import { AppResponseTimeMiddleware } from './middlewares/app.response-time.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { AppValidationFilter } from 'src/app/filters/app.validation.filter';
+import { AppHttpFilter } from './filters/app.http.filter';
 
 @Module({
   providers: [
     {
       provide: APP_FILTER,
       useClass: AppValidationFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AppHttpFilter,
     },
   ],
 })
