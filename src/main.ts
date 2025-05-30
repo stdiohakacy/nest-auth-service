@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { NestApplication, NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { MicroserviceOptions } from '@nestjs/microservices';
 import { ReflectionService } from '@grpc/reflection';
@@ -8,12 +8,13 @@ import compression from 'compression';
 import { useContainer, validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { AppEnvDto } from './app/dtos/app.env.dto';
+import swaggerInit from './swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app: NestApplication = await NestFactory.create(AppModule, {
     abortOnError: true,
     bufferLogs: false,
-  } as NestApplicationOptions);
+  });
 
   const configService = app.get(ConfigService);
 
@@ -63,6 +64,9 @@ async function bootstrap() {
     logger.error(errors);
     throw new Error('Env Variable Invalid');
   }
+
+  // Swagger
+  await swaggerInit(app);
 
   await app.listen(restPort, restHost);
 

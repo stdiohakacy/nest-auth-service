@@ -6,6 +6,7 @@ export default registerAs(
     name: process.env.AUTH_SRV_APP_NAME,
     env: process.env.AUTH_SRV_APP_ENV,
     timezone: process.env.AUTH_SRV_APP_TIMEZONE,
+    version: '0.0.1',
     globalPrefix: '/api',
 
     grpc: {
