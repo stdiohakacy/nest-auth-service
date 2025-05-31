@@ -1,0 +1,6 @@
+- Checklist
+    - Bounded Context
+    - Communicate between services (Sync, Async)
+    - Schema Communicate (DTO, Protobuf, Event message)
+    - Document
+    - mTLS

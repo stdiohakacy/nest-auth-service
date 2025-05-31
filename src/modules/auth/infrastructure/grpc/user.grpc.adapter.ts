@@ -1,19 +1,16 @@
 import { ERROR_CODES } from '@base/exceptions/error.codes';
-import { UserGrpcPort } from '@module/auth/application/ports/outbound/user.grpc.port';
+import {
+  CreateUserInput,
+  CreateUserOutput,
+  UserGrpcPort,
+  UserServiceGrpc,
+} from '@module/auth/application/ports/outbound/user.grpc.port';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { status } from '@grpc/grpc-js';
 import { Err, Ok, Result } from 'oxide.ts';
-import { AuthEmailAlreadyRegisteredError } from '@module/auth/domain/errors/auth.error';
-
-interface UserServiceGrpc {
-  CreateUser(data: {
-    email: string;
-    password: string;
-    name: string;
-  }): Observable<{ id: string }>;
-}
+import { AuthAccountAlreadyRegistered } from '@module/auth/domain/errors/auth.error';
 
 @Injectable()
 export class UserGrpcAdapter implements UserGrpcPort, OnModuleInit {
@@ -28,11 +25,9 @@ export class UserGrpcAdapter implements UserGrpcPort, OnModuleInit {
       this.clientGrpc.getService<UserServiceGrpc>('UserService');
   }
 
-  async createUser(data: {
-    email: string;
-    name: string;
-    password: string;
-  }): Promise<Result<{ id: string }, AuthEmailAlreadyRegisteredError>> {
+  async createUser(
+    data: CreateUserInput,
+  ): Promise<Result<CreateUserOutput, AuthAccountAlreadyRegistered>> {
     try {
       const result = await firstValueFrom(this.userService.CreateUser(data));
       return Ok({ id: result.id });
@@ -42,8 +37,9 @@ export class UserGrpcAdapter implements UserGrpcPort, OnModuleInit {
         error.metadata?.get('errorCode')?.[0] ===
           ERROR_CODES.USER.ALREADY_EXISTS
       ) {
-        return Err(new AuthEmailAlreadyRegisteredError());
+        return Err(new AuthAccountAlreadyRegistered());
       }
+      throw error; // or: return Err(new InfraError(error));
     }
   }
 }

@@ -8,7 +8,6 @@ import { ENUM_AUTH_SRV_APP_ENVIRONMENT } from 'src/app/enums/app.enum';
 export default async function (app: NestApplication) {
   const configService = app.get(ConfigService);
   const env = configService.get<string>('app.env');
-  const logger = new Logger('NestJS-Auth-Srv-Swagger');
 
   const docName: string = configService.get<string>('doc.name');
   const docDesc: string = configService.get<string>('doc.description');
@@ -62,6 +61,9 @@ export default async function (app: NestApplication) {
       },
     });
 
-    logger.log(`Docs will serve on ${docPrefix}`, 'NestApplication');
+    console.log(
+      `Docs will serve on http://0.0.0.0:3000${docPrefix}`,
+      'NestApplication',
+    );
   }
 }
